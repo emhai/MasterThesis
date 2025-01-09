@@ -1,13 +1,34 @@
-def create_new_folders(folder_path):
-    before = [*range(35, 45)]
-    after = [*range(55, 45, -1)]
+import argparse
+import shutil
 
-    for i in range(len(before)):
-        folder_name = f"test{before[i]}to{after[i]}"
-        new_folder_path = os.path.join(folder_path, folder_name)
-        os.mkdir(new_folder_path)
-        first_file_name = str(before[i]) + ".JPG"
-        second_file_name = str(after[i]) + ".JPG"
-        shutil.copyfile(folder_path + "/" + first_file_name, new_folder_path + "/" + first_file_name)
-        shutil.copyfile(folder_path + "/" + second_file_name, new_folder_path + "/" + second_file_name)
+import utils
+import re
+import os
 
+def strip_to_numerals(name):
+    return ''.join(re.findall(r'\d+', name))
+
+def run(path):
+    path = path.rstrip("/")
+    filenames = [f for f in os.listdir(path)]
+    filenames.sort()
+    len_filenames = len(filenames)
+    for i in range(len(filenames) // 2):
+        name1 = strip_to_numerals(filenames[i])
+        name2 = strip_to_numerals(filenames[len_filenames - 1 - i])
+        folder_name = f"test{name1}x{name2}"
+        folder_path = os.path.join(os.path.dirname(path), "tests", folder_name)
+        os.makedirs(folder_path)
+        shutil.copyfile(os.path.join(path, filenames[i]), os.path.join(folder_path, filenames[i]))
+        shutil.copyfile(os.path.join(path, filenames[len_filenames - 1 - i]), os.path.join(folder_path, filenames[len_filenames - 1 - i]))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path', type=utils.dir_path, help='Path to the directory')
+
+    args = parser.parse_args()
+    run(args.path)
+
+if __name__ == "__main__":
+    main()

@@ -24,6 +24,7 @@ def main():
 
     original_images_path = os.path.join(main_folder_path, "original_images")
     shutil.copytree(path, original_images_path)
+
     width = 1024
     height = 576
     resize_images.run(original_images_path, width, height)

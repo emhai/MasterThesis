@@ -42,7 +42,8 @@ def run(path):
 
 
         with open(modified_script_path, 'w') as file:
-            file.write("#!/bin/sh\n")
+            file.write("#!/bin/bash\n")
+            file.write("source ~/.zshrc\n")
             file.write(f"cd {script_folder}\n")
             file.write("conda deactivate\n")
             file.write("source /home/emmahaidacher/miniconda3/bin/activate viewcrafter\n")
@@ -51,13 +52,8 @@ def run(path):
             st = os.stat(modified_script_path)
             os.chmod(modified_script_path, st.st_mode | stat.S_IEXEC)
 
-        process = subprocess.Popen(modified_script_path, shell=True, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        process.wait()  # Wait for process to complete.
+        print(subprocess.Popen("sh " + modified_script_path, shell=True, stdout=subprocess.PIPE).stdout.read())
 
-        # iterate on the stdout line by line
-        for line in process.stdout.readlines():
-            print(line)
 
 def main():
     parser = argparse.ArgumentParser()
