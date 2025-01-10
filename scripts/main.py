@@ -1,8 +1,11 @@
 import argparse
 import os
 import resize_images
+import run_viewcrafter
+import create_image_combinations
 import shutil
 import utils
+import extract_frames
 
 
 def main():
@@ -34,11 +37,20 @@ def main():
 
     print(f"Copying images from {path} to {main_folder_path}")
     original_images_path = os.path.join(main_folder_path, "original_images")
+    cropped_images_path = os.path.join(main_folder_path, "cropped_images")
+    input_path = os.path.join(main_folder_path, "input")
+    output_path = os.path.join(main_folder_path, "output")
+
     shutil.copytree(path, original_images_path)
 
     width = 1024
     height = 576
     resize_images.run(original_images_path, width, height)
+    create_image_combinations.run(original_images_path)
+    run_viewcrafter.run(input_path)
+    extract_frames.run(output_path)
+
+
 
 if __name__ == "__main__":
     main()

@@ -31,7 +31,7 @@ def run(path):
 
         name = subdir.replace("test", "")
         image_dir = subdir_path
-        out_dir = os.path.join(os.path.dirname(path), "outs", "out" + name)
+        out_dir = os.path.join(os.path.dirname(path), "output", "out" + name)
         video_length = 16
         modified_script_path = os.path.join(modified_script_folder, "script" + name + ".sh")
 
@@ -53,12 +53,19 @@ def run(path):
             st = os.stat(modified_script_path)
             os.chmod(modified_script_path, st.st_mode | stat.S_IEXEC)
 
-        try:
-            result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
-            print(result.stdout)
-        except subprocess.CalledProcessError as e:
-            print("Error:")
-            print(e.stderr)
+
+        result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
+        print(result.stdout)
+
+        extra_folder = os.path.join(out_dir, os.listdir(out_dir)[0])
+        print("Extra Folder", extra_folder)
+        all_files = os.listdir(extra_folder)
+        for f in all_files:
+            shutil.move(os.path.join(extra_folder, f), out_dir)
+
+        os.rmdir(extra_folder)
+
+
 
 def main():
     """
