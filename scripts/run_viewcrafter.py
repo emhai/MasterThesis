@@ -38,8 +38,9 @@ def run(path):
         modified_content = re.sub(r'--image_dir\s+\S+', f'--image_dir {image_dir}', script_content)
         modified_content = re.sub(r'--out_dir\s+\S+', f'--out_dir {out_dir}', modified_content)
         modified_content = re.sub(r'--video_length\s+\S+', f'--video_length {video_length}', modified_content)
-        #modified_content = re.sub(r'python\s+\S+', f'python {modified_script_path}', modified_content)
+        # modified_content = re.sub(r'python\s+\S+', f'python {modified_script_path}', modified_content)
 
+        print("Currently running:", name)
 
         with open(modified_script_path, 'w') as file:
             file.write("#!/bin/bash\n")
@@ -52,12 +53,21 @@ def run(path):
             st = os.stat(modified_script_path)
             os.chmod(modified_script_path, st.st_mode | stat.S_IEXEC)
 
-        print(subprocess.Popen("sh " + modified_script_path, shell=True, stdout=subprocess.PIPE).stdout.read())
-
+        try:
+            result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
+            print(result.stdout)
+        except subprocess.CalledProcessError as e:
+            print("Error:")
+            print(e.stderr)
 
 def main():
+    """
+    Takes path ../name/input and runs viewcrafter on each pairwise image combination. This is done by copying the
+    original shell file, modifying the --image_dir and --out_dir, adding some terminal commands and then running
+    this modified shell scrips. The output folder is ../name/output with pattern out44x46.
+    """
     parser = argparse.ArgumentParser()
-    parser.add_argument('path', type=utils.dir_path, help='Path to the directory that contains e.g. test44to46')
+    parser.add_argument('path', type=utils.dir_path, help='Path to the ../name/input that contains e.g. in44x46')
     args = parser.parse_args()
     path = args.path.rstrip("/")
 

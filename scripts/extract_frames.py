@@ -3,12 +3,13 @@ import os
 import utils
 import subprocess
 
+def run(path):
 
-def run(path): # path should be
 
     for subdir in os.listdir(path):
         subdir_path = os.path.join(path, subdir)
 
+        print(f"Extracting frames from {subdir_path}")
         diffusion_path = os.path.join(subdir_path, "extracted_diffusion")
         if not os.path.exists(diffusion_path):
             os.makedirs(diffusion_path)
@@ -24,10 +25,12 @@ def run(path): # path should be
         subprocess.run(ffmpeg_command)
 
 def main():
+    """
+    Takes path ../name/output and iterates through all created results (by viewcrafter). Subsequently extracts the frames from
+    diffusion.mp4 to folder ../name/output/../extracted_diffusion and render.mp4 to folder ../name/output/../extracted_render
+    """
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('path', type=utils.dir_path, help='Path to the directory')
-
+    parser.add_argument('path', type=utils.dir_path, help='Path to ../name/output')
     args = parser.parse_args()
     run(args.path)
 

@@ -3,14 +3,6 @@ import os
 import argparse
 import utils
 
-def crop_image(image_path, size, out_path):
-    # todo this works but I could use viewcrafters center_crop_image
-    image = Image.open(image_path)
-    file_name = os.path.basename(image_path)
-
-    image = ImageOps.fit(image, size, method=Image.LANCZOS, centering=(0.5, 0.5))
-    image.save(os.path.join(out_path, file_name))
-
 def run(path, width, height):
 
     path = path.rstrip("/")
@@ -22,10 +14,20 @@ def run(path, width, height):
 
     for path, dirs, files in os.walk(path):
         for file in files:
-            print(os.path.join(path, file))
-            crop_image(os.path.join(path, file), size, new_folder_path)
+            # todo this works but I could use viewcrafters center_crop_image
+            print(f"Cropping {os.path.join(path, file)}")
+            image_path = os.path.join(path, file)
+            image = Image.open(image_path)
+            file_name = os.path.basename(image_path)
+
+            image = ImageOps.fit(image, size, method=Image.LANCZOS, centering=(0.5, 0.5))
+            image.save(os.path.join(new_folder_path, file_name))
 
 def main():
+    """
+    Takes path ../name/original_images, center crops images to given size (probably 1024x576) to fit to
+    viewcrafters output and puts them to folder ../name/cropped_images
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument('path', type=utils.dir_path, help='Path to the directory')
