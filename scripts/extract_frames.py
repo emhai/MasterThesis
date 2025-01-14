@@ -5,7 +5,6 @@ import subprocess
 
 def run(path):
 
-
     for subdir in os.listdir(path):
         subdir_path = os.path.join(path, subdir)
 

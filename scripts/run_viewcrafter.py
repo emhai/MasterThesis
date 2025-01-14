@@ -29,11 +29,11 @@ def run(path):
             print("ERROR: There should be exactly two files in " + subdir_path)
             exit()
 
-        name = subdir.replace("test", "")
+        name = subdir.replace("in", "")
         image_dir = subdir_path
         out_dir = os.path.join(os.path.dirname(path), "output", "out" + name)
         video_length = 16
-        modified_script_path = os.path.join(modified_script_folder, "script" + name + ".sh")
+        modified_script_path = os.path.join(modified_script_folder, "script_" + name + ".sh")
 
         modified_content = re.sub(r'--image_dir\s+\S+', f'--image_dir {image_dir}', script_content)
         modified_content = re.sub(r'--out_dir\s+\S+', f'--out_dir {out_dir}', modified_content)
@@ -58,7 +58,6 @@ def run(path):
         print(result.stdout)
 
         extra_folder = os.path.join(out_dir, os.listdir(out_dir)[0])
-        print("Extra Folder", extra_folder)
         all_files = os.listdir(extra_folder)
         for f in all_files:
             shutil.move(os.path.join(extra_folder, f), out_dir)
