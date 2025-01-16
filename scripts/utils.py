@@ -1,5 +1,6 @@
 import os
 
+# todo if necessary
 input_folder_name = "input"
 output_folder_name = "output"
 input_images_prefix = "in"

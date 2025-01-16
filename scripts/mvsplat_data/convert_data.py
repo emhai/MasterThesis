@@ -128,15 +128,6 @@ def load_metadata(example_path: Path) -> Metadata:
 
     return {"url": url, "timestamps": timestamps, "cameras": cameras}
 
-
-def partition_train_test_splits(root_dir, n_test=10):
-    sub_folders = sorted(glob(os.path.join(root_dir, "*/")))
-    test_list = sub_folders[::n_test]
-    train_list = [x for x in sub_folders if x not in test_list]
-    out_dict = {"train": train_list, "test": test_list}
-    return out_dict
-
-
 def is_image_shape_matched(image_dir, target_shape):
     image_path = sorted(glob(str(image_dir / "*")))
     if len(image_path) == 0:
@@ -158,7 +149,7 @@ def legal_check_for_all_scenes(root_dir, target_shape):
     valid_folders = []
     sub_folders = sorted(glob(os.path.join(root_dir)))
     for sub_folder in tqdm(sub_folders, desc="checking scenes..."):
-        img_dir = os.path.join(sub_folder, "images_8")  # 270x480
+        img_dir = os.path.join(sub_folder, "images")  # 270x480
         # img_dir = os.path.join(sub_folder, 'images_4')  # 540x960
         if not is_image_shape_matched(Path(img_dir), target_shape):
             print(f"image shape does not match for {sub_folder}")
@@ -175,7 +166,7 @@ def legal_check_for_all_scenes(root_dir, target_shape):
 
 if __name__ == "__main__":
     if "images_8" in args.img_subdir:
-        target_shape = (270, 480)  # (h, w)
+        target_shape = (3024, 4032)  # (h, w)
     elif "images_4" in args.img_subdir:
         target_shape = (540, 960)
     else:
@@ -250,6 +241,8 @@ if __name__ == "__main__":
 
             if chunk_size >= TARGET_BYTES_PER_CHUNK:
                 save_chunk()
+                print("success?")
 
         if chunk_size > 0:
             save_chunk()
+            print("success f")

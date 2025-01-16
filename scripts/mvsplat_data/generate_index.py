@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 from tqdm import tqdm
 
-DATASET_PATH = Path("/home/emmahaidacher/Desktop/mvsplat360/mvsplat360/datasets/vasedeck_neww")
+DATASET_PATH = Path("/home/emmahaidacher/Masterthesis/MasterThesis/test16")
 
 if __name__ == "__main__":
     # "train" or "test"
