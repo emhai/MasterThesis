@@ -12,10 +12,12 @@ def run(path, width, height):
     if not os.path.exists(new_folder_path):
         os.makedirs(new_folder_path)
 
+
+    print(f"Cropping images {os.path.join(path)}")
+
     for path, dirs, files in os.walk(path):
         for file in files:
             # todo this works but I could use viewcrafters center_crop_image
-            print(f"Cropping {os.path.join(path, file)}")
             image_path = os.path.join(path, file)
             image = Image.open(image_path)
             file_name = os.path.basename(image_path)

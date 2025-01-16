@@ -1,11 +1,14 @@
 import argparse
 import os
+import shutil
+
 import resize_images
 import run_viewcrafter
 import create_image_combinations
-import shutil
 import utils
 import extract_frames
+import run_colmap
+import visualize_cameras
 
 
 def main():
@@ -13,6 +16,8 @@ def main():
     Pipeline:   1. todo choose pictures
                 2. create folder ../name
                 3. copy images to ../name/original_images
+                   run colmap to get tranfsorms.json
+                   run viszalize cameras
                 4. create pairwise combinations of variable length to ../name/input
                 5. process each combination with viewcrafter to ../name/output
                 6. create cropped ground truth images to ../name/cropped_images
@@ -21,7 +26,7 @@ def main():
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('path', type=utils.dir_path, help='Path to the directory')
+    parser.add_argument('path', type=utils.dir_path, help='Path to the image directory')
     parser.add_argument('name', type=str, help='Name of test')
 
     args = parser.parse_args()
@@ -38,10 +43,14 @@ def main():
     print(f"Copying images from {path} to {main_folder_path}")
     original_images_path = os.path.join(main_folder_path, "original_images")
     cropped_images_path = os.path.join(main_folder_path, "cropped_images")
+    colmap_images_path = os.path.join(main_folder_path, "colmap_images")
     input_path = os.path.join(main_folder_path, "input")
     output_path = os.path.join(main_folder_path, "output")
 
     shutil.copytree(path, original_images_path)
+
+    run_colmap.run(original_images_path)
+    visualize_cameras.run(os.path.join(colmap_images_path, "transforms.json"))
 
     width = 1024
     height = 576

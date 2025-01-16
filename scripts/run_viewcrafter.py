@@ -53,10 +53,12 @@ def run(path):
             st = os.stat(modified_script_path)
             os.chmod(modified_script_path, st.st_mode | stat.S_IEXEC)
 
-
+        original_env = os.environ.copy()
         result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
-        print(result.stdout)
+        os.environ.clear()
+        os.environ.update(original_env)
 
+        print(result.stdout)
         extra_folder = os.path.join(out_dir, os.listdir(out_dir)[0])
         all_files = os.listdir(extra_folder)
         for f in all_files:

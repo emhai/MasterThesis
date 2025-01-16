@@ -20,6 +20,8 @@ def run(path):
     os.makedirs(input_path)
 
     # todo what if even amount -> delete 1?
+    print(f"Creating new folders")
+
     print(f"Creating {image_amount} new folders in {input_path}")
     for i in range(image_amount):
         last_i = len_filenames - 1 - i
@@ -27,7 +29,6 @@ def run(path):
         name2 = strip_to_numerals(filenames[last_i])
         folder_name = f"in{name1}x{name2}"
         folder_path = os.path.join(os.path.dirname(path), "input", folder_name)
-        print(f"Creating new folder {folder_path}")
         os.makedirs(folder_path)
         shutil.copyfile(os.path.join(path, filenames[i]), os.path.join(folder_path, filenames[i]))
         shutil.copyfile(os.path.join(path, filenames[last_i]), os.path.join(folder_path, filenames[last_i]))
