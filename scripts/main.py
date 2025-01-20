@@ -10,7 +10,6 @@ import extract_frames
 import run_colmap
 import visualize_cameras
 
-
 def main():
     """
     Pipeline:   1. todo choose pictures
@@ -41,13 +40,21 @@ def main():
         exit()
 
     print(f"Copying images from {path} to {main_folder_path}")
-    original_images_path = os.path.join(main_folder_path, "original_images")
-    cropped_images_path = os.path.join(main_folder_path, "cropped_images")
-    colmap_images_path = os.path.join(main_folder_path, "colmap_images")
+    original_images_path = os.path.join(main_folder_path, "original")
+    cropped_images_path = os.path.join(main_folder_path, "cropped")
+    colmap_images_path = os.path.join(main_folder_path, "colmap")
     input_path = os.path.join(main_folder_path, "input")
     output_path = os.path.join(main_folder_path, "output")
 
     shutil.copytree(path, original_images_path)
+    filenames = [f for f in os.listdir(original_images_path)]
+    filenames.sort()
+
+    for i, filename in enumerate(filenames, start=1):
+        name, extension = os.path.splitext(filename)
+        old_path = os.path.join(original_images_path, filename)
+        new_path = os.path.join(original_images_path, f"{i:03}{extension}")
+        os.rename(old_path, new_path)
 
     run_colmap.run(original_images_path)
     visualize_cameras.run(os.path.join(colmap_images_path, "transforms.json"))
