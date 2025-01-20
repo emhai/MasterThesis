@@ -5,8 +5,8 @@ import os
 import argparse
 import utils
 
-def run(path):
 
+def run(path):
     path = path.rstrip("/")
 
     new_folder_path = os.path.join(os.path.dirname(path), "colmap_images")
@@ -18,10 +18,13 @@ def run(path):
     print(f"Running Colmap on {path}")
     # https://chatgpt.com/c/67891c7d-8db4-8001-8f47-5e79e6e89c68 -- help from chatgpt
     # Important! deactivate scripts - activate nerfstudio - deactivate nerfstudio - activate scripts
-    subprocess.run(f'bash -c "source ~/.zshrc && conda deactivate && conda activate nerfstudio && ns-process-data images --data {path} --output-dir {new_folder_path}"', shell=True)
+    subprocess.run(
+        f'bash -c "source ~/.zshrc && conda deactivate && conda activate nerfstudio && ns-process-data images --data {path} --output-dir {new_folder_path}"',
+        shell=True)
 
     os.environ.clear()
     os.environ.update(original_env)
+
 
 def main():
     """
@@ -33,6 +36,7 @@ def main():
 
     args = parser.parse_args()
     run(args.path)
+
 
 if __name__ == "__main__":
     main()
