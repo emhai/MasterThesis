@@ -42,14 +42,16 @@ def main():
     print(f"Copying images from {path} to {main_folder_path}")
     original_images_path = os.path.join(main_folder_path, "original")
     cropped_images_path = os.path.join(main_folder_path, "cropped")
-    colmap_images_path = os.path.join(main_folder_path, "colmap")
+    colmap_images_path = os.path.join(main_folder_path, "colmap_images")
     input_path = os.path.join(main_folder_path, "input")
     output_path = os.path.join(main_folder_path, "output")
 
+    # copy to original_images
     shutil.copytree(path, original_images_path)
     filenames = [f for f in os.listdir(original_images_path)]
     filenames.sort()
 
+    # rename
     for i, filename in enumerate(filenames, start=1):
         name, extension = os.path.splitext(filename)
         old_path = os.path.join(original_images_path, filename)
