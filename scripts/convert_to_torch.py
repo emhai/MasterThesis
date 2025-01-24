@@ -55,11 +55,12 @@ def load_metadata(transforms_path):
     return {"url": url, "timestamps": timestamps, "cameras": cameras}
 
 
-def run(colmap_path):
+def run(colmap_path, resolution, output_path):
 
     key = os.path.basename(os.path.dirname(colmap_path.strip("/")))
-    images_path = os.path.join(colmap_path, "images_8")
+    images_path = os.path.join(colmap_path, resolution)
     images = {}
+
     for filename in os.listdir(images_path):
         name, extension = os.path.splitext(filename)
         name = int(name.split("_")[-1])
@@ -74,16 +75,13 @@ def run(colmap_path):
     ]
 
     chunk["key"] = key
-    test_folder_path = os.path.join(colmap_path, "test") # mvsplat needs this like this
-    if not os.path.exists(test_folder_path):
-        os.makedirs(test_folder_path)
 
     torch_chunk = [chunk]
     torch_filename = "000000.torch"
-    torch.save(torch_chunk, os.path.join(test_folder_path, torch_filename))
+    torch.save(torch_chunk, os.path.join(output_path, torch_filename))
     index = {key: torch_filename}
 
-    with open(os.path.join(test_folder_path, "index.json"), 'w') as f:
+    with open(os.path.join(output_path, "index.json"), 'w') as f:
         json.dump(index, f)
 
 def main():
@@ -91,11 +89,12 @@ def main():
     Takes path ../name/colmap_images and converts the images_8 folder to one big torch file
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('colmap_path', type=utils.dir_path, help='Path to the image directory')
-
+    parser.add_argument('colmap_path', type=utils.dir_path, help='Path to the ..name/mvsplat360/colmap')
+    parser.add_argument("resolution", type=str, help='images_8, images, ... whichever')
+    parser.add_argument('output_path', type=utils.dir_path, help='Path to the ..name/mvsplat360/input/test')
 
     args = parser.parse_args()
-    run(args.colmap_path)
+    run(args.colmap_path, args.resolution, args.output_path)
 
 if __name__ == "__main__":
     main()

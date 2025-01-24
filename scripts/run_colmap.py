@@ -6,20 +6,15 @@ import argparse
 import utils
 
 
-def run(path):
-    path = path.rstrip("/")
-
-    new_folder_path = os.path.join(os.path.dirname(path), "colmap_images")
-    if not os.path.exists(new_folder_path):
-        os.makedirs(new_folder_path)
+def run(input_path, output_path):
 
     original_env = os.environ.copy()
 
-    print(f"Running Colmap on {path}")
+    print(f"Running Colmap on {input_path}")
     # https://chatgpt.com/c/67891c7d-8db4-8001-8f47-5e79e6e89c68 -- help from chatgpt
     # Important! deactivate scripts - activate nerfstudio - deactivate nerfstudio - activate scripts
     subprocess.run(
-        f'bash -c "source ~/.zshrc && conda deactivate && conda activate nerfstudio && ns-process-data images --data {path} --output-dir {new_folder_path}"',
+        f'bash -c "source ~/.zshrc && conda deactivate && conda activate nerfstudio && ns-process-data images --data {input_path} --output-dir {output_path}"',
         shell=True)
 
     os.environ.clear()
@@ -28,14 +23,19 @@ def run(path):
 
 def main():
     """
-    Takes path ../name/original_images and runs colmap (via nerfstudio)
+    Takes path ../name/original_images and runs colmap (via nerfstudio) and saves result to mvsplat360/colmap
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('path', type=utils.dir_path, help='Path to the directory')
+    parser.add_argument('input_path', type=utils.dir_path, help='Path to original_images')
+    parser.add_argument('output_path', type=utils.dir_path, help='Path to mvsplat360/colmap')
 
     args = parser.parse_args()
-    run(args.path)
+
+    input_path = args.input_path.rstrip("/")
+    output_path = args.output_path.rstrip("/")
+
+    run(input_path, output_path)
 
 
 if __name__ == "__main__":

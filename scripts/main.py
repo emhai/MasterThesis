@@ -9,6 +9,13 @@ import utils
 import extract_frames
 import run_colmap
 import visualize_cameras
+import convert_to_torch
+
+def create_folder_structure(folders):
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+            print('Created folder:', folder)
 
 def main():
     """
@@ -29,8 +36,8 @@ def main():
     parser.add_argument('name', type=str, help='Name of test')
 
     args = parser.parse_args()
-    path = args.path
-    name = args.name
+    path = args.path # folder with input pictures
+    name = args.name # name of test
 
     main_folder_path = os.path.join("/home/emmahaidacher/Masterthesis/MasterThesis/tests", name)
     if not os.path.exists(main_folder_path):
@@ -40,11 +47,27 @@ def main():
         exit()
 
     print(f"Copying images from {path} to {main_folder_path}")
-    original_images_path = os.path.join(main_folder_path, "original")
-    cropped_images_path = os.path.join(main_folder_path, "cropped")
-    colmap_images_path = os.path.join(main_folder_path, "colmap_images")
-    input_path = os.path.join(main_folder_path, "input")
-    output_path = os.path.join(main_folder_path, "output")
+
+    original_images_path = os.path.join(main_folder_path, "images")
+    viewcrafter_path = os.path.join(main_folder_path, "viewcrafter")
+    mvsplat_path = os.path.join(main_folder_path, "mvsplat360")
+
+    vc_input_path = os.path.join(viewcrafter_path, "input")
+    vc_output_path = os.path.join(viewcrafter_path, "output")
+    vc_scripts_path = os.path.join(viewcrafter_path, "scripts")
+    vc_GT_path = os.path.join(viewcrafter_path, "GT")
+
+    mv_input_path = os.path.join(mvsplat_path, "input")
+    mv_output_path = os.path.join(mvsplat_path, "output")
+    mv_colmap_path = os.path.join(mvsplat_path, "colmap")
+
+    mv_input_test_path = os.path.join(mv_input_path, "test")
+    mv_input_json_path = os.path.join(mv_input_path, "json_files")
+
+    all_folders = [viewcrafter_path, mvsplat_path, vc_input_path, vc_output_path, vc_scripts_path,
+                   vc_GT_path, mv_input_path, mv_output_path, mv_colmap_path, mv_input_test_path, mv_input_json_path]
+
+    create_folder_structure(all_folders)
 
     # copy to original_images
     shutil.copytree(path, original_images_path)
@@ -52,22 +75,23 @@ def main():
     filenames.sort()
 
     # rename
-    for i, filename in enumerate(filenames, start=1):
+    for i, filename in enumerate(filenames,):
         name, extension = os.path.splitext(filename)
         old_path = os.path.join(original_images_path, filename)
         new_path = os.path.join(original_images_path, f"{i:03}{extension}")
         os.rename(old_path, new_path)
 
-    run_colmap.run(original_images_path)
-    visualize_cameras.run(os.path.join(colmap_images_path, "transforms.json"))
 
-    width = 1024
-    height = 576
-    resize_images.run(original_images_path, width, height)
-    create_image_combinations.run(original_images_path)
-    run_viewcrafter.run(input_path)
-    extract_frames.run(output_path)
+    create_image_combinations.run(original_images_path, vc_input_path, vc_GT_path, mv_input_json_path)
 
+    # VIEWCRAFTER
+    run_viewcrafter.run(vc_input_path, vc_output_path, vc_scripts_path)
+    extract_frames.run(vc_output_path)
+
+    # MVSPLAT360
+    run_colmap.run(original_images_path, mv_colmap_path)
+    visualize_cameras.run(os.path.join(mv_colmap_path, "transforms.json"))
+    convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path)
 
 
 if __name__ == "__main__":
