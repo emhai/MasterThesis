@@ -21,15 +21,14 @@ def run(input_path, output_path):
 
         test_file = os.path.join(json_dir, file)
         name = file.split(".")[0]
-        out_dir = os.path.join(output_path, name)
 
         modified_content = script_content
         modified_content = re.sub(r'CHOSEN_NAME', name, modified_content)
         modified_content = re.sub(r'PATH_TO_JSON', test_file, modified_content)
         modified_content = re.sub(r'PATH_TO_DATASET', input_path, modified_content)
         modified_content = re.sub(r'IMAGE_SHAPE', "[378,504]", modified_content) # e.g. [378,504] -- [h,w]
-        modified_content = re.sub(r'PATH_TO_OUT_DIR', out_dir, modified_content)
-        modified_content.strip("\n")
+        modified_content = re.sub(r'PATH_TO_OUT_DIR', output_path, modified_content)
+        modified_content = modified_content.replace("\n", "")
 
         original_env = os.environ.copy()
 

@@ -57,7 +57,7 @@ def load_metadata(transforms_path):
 
 def run(colmap_path, resolution, output_path):
 
-    key = os.path.basename(os.path.dirname(colmap_path.strip("/")))
+    key = colmap_path.split("/")[-3]
     images_path = os.path.join(colmap_path, resolution)
     images = {}
 

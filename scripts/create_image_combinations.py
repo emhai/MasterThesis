@@ -11,7 +11,7 @@ def strip_to_numerals(name):
 
 def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
 
-    name = os.path.basename(input_path)
+    name = os.path.basename(os.path.dirname(input_path))
 
     filenames = [f for f in os.listdir(input_path)]
     filenames.sort()
@@ -31,6 +31,8 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
         name1 = strip_to_numerals(filenames[i])
         name2 = strip_to_numerals(filenames[last_i])
 
+        if middle_i == int(name1) + 1 and middle_i == int(name2) - 1:
+            continue
         # INPUT FOR VIEWCRAFTER
         folder_name = f"{name1}_{name2}"
         folder_path = os.path.join(vc_input_path, folder_name)
