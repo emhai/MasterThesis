@@ -1,0 +1,12 @@
+    python -m src.main +experiment=dl3dv_mvsplat360
+    wandb.name=CHOSEN_NAME
+    mode=test
+    dataset/view_sampler=evaluation
+    dataset.view_sampler.index_path=PATH_TO_JSON
+    dataset.view_sampler.num_context_views=3
+    dataset.roots=[PATH_TO_DATASET]
+    checkpointing.load=checkpoints/dl3dv_480p.ckpt
+    dataset.image_shape=IMAGE_SHAPE
+    dataset.ori_image_shape=IMAGE_SHAPE
+    output_dir=PATH_TO_OUT_DIR
+    test.output_path=PATH_TO_OUT_DIR

@@ -11,7 +11,7 @@ def strip_to_numerals(name):
 
 def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
 
-    name = os.path.dirname(input_path)
+    name = os.path.basename(input_path)
 
     filenames = [f for f in os.listdir(input_path)]
     filenames.sort()

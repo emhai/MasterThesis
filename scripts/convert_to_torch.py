@@ -90,8 +90,8 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('colmap_path', type=utils.dir_path, help='Path to the ..name/mvsplat360/colmap')
-    parser.add_argument("resolution", type=str, help='images_8, images, ... whichever')
     parser.add_argument('output_path', type=utils.dir_path, help='Path to the ..name/mvsplat360/input/test')
+    parser.add_argument("resolution", type=str, default="images_8", help='images_8, images, ... whichever')
 
     args = parser.parse_args()
     run(args.colmap_path, args.resolution, args.output_path)
