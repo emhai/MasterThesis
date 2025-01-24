@@ -23,9 +23,8 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
     image_amount = len(filenames) // 2
     middle_i = image_amount
 
-    print(f"Creating new folders")
+    print(f"Creating inputs")
 
-    print(f"Creating {image_amount} new folders in {input_path}")
     for i in range(image_amount):
         last_i = len_filenames - 1 - i
         name1 = strip_to_numerals(filenames[i])

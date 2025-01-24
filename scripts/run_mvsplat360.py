@@ -8,8 +8,8 @@ import utils
 import os
 import re
 import stat
-
-
+import resource
+import json
 def run(input_path, output_path):
 
     json_dir = os.path.join(input_path, "json_files") # todo ACHTUNG, muss gleich sein wie in main.py
@@ -17,11 +17,12 @@ def run(input_path, output_path):
     with open("/home/emmahaidacher/Masterthesis/MasterThesis/scripts/mvsplat_input.txt", 'r') as file:
         script_content = file.read()
 
+    results = {}
+
     for file in os.listdir(json_dir):
 
         test_file = os.path.join(json_dir, file)
         name = file.split(".")[0]
-
         modified_content = script_content
         modified_content = re.sub(r'CHOSEN_NAME', name, modified_content)
         modified_content = re.sub(r'PATH_TO_JSON', test_file, modified_content)
@@ -31,14 +32,25 @@ def run(input_path, output_path):
         modified_content = modified_content.replace("\n", "")
 
         original_env = os.environ.copy()
-
+        # https://stackoverflow.com/questions/13889066/run-an-external-command-and-get-the-amount-of-cpu-it-consumed/13933797#13933797
+        usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
         print("Currently running:", name)
         subprocess.run(
             f'bash -c "source ~/.zshrc && conda deactivate && conda activate mvsplat360 && cd {mvsplat_dir} && {modified_content}"',
             shell=True)
-
+        usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+        cpu_time = usage_end.ru_utime - usage_start.ru_utime
         os.environ.clear()
         os.environ.update(original_env)
+        results[name] = {"inference_time": cpu_time, "name": name, "framework": "mvsplat360"}
+
+
+    print("MVSplat360 Success")
+    results_path = input_path.split("/")[0: -2]
+    results_path = os.path.join("/", *results_path)
+    final_results = {"mvsplat360": results}
+    with open(os.path.join(results_path, "results.json"), 'w') as f:
+        json.dump(final_results, f)
 
 
 def main():

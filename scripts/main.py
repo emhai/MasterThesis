@@ -86,14 +86,15 @@ def main():
     create_image_combinations.run(original_images_path, vc_input_path, vc_GT_path, mv_input_json_path)
 
     # VIEWCRAFTER
-    #run_viewcrafter.run(vc_input_path, vc_output_path, vc_scripts_path)
-    #extract_frames.run(vc_output_path)
+    run_viewcrafter.run(vc_input_path, vc_output_path, vc_scripts_path)
+    extract_frames.run(vc_output_path)
 
     # MVSPLAT360
     run_colmap.run(original_images_path, mv_colmap_path)
     visualize_cameras.run(os.path.join(mv_colmap_path, "transforms.json"))
     convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path)
     run_mvsplat360.run(mv_input_path, mv_output_path)
+
 
 
 if __name__ == "__main__":

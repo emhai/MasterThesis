@@ -8,7 +8,8 @@ import utils
 import os
 import re
 import stat
-
+import resource
+import json
 
 def run(input_path, output_path, scripts_path):
 
@@ -18,6 +19,8 @@ def run(input_path, output_path, scripts_path):
 
     with open(ori_script_path, 'r') as file:
         script_content = file.read()
+
+    results = {}
 
     for name in os.listdir(input_path):
         in_dir = os.path.join(input_path, name)
@@ -51,7 +54,11 @@ def run(input_path, output_path, scripts_path):
             os.chmod(modified_script_path, st.st_mode | stat.S_IEXEC)
 
         original_env = os.environ.copy()
+        # https://stackoverflow.com/questions/13889066/run-an-external-command-and-get-the-amount-of-cpu-it-consumed/13933797#13933797
+        usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
         result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
+        usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+        cpu_time = usage_end.ru_utime - usage_start.ru_utime
         os.environ.clear()
         os.environ.update(original_env)
 
@@ -62,6 +69,18 @@ def run(input_path, output_path, scripts_path):
             shutil.move(os.path.join(extra_folder, f), out_dir)
 
         os.rmdir(extra_folder)
+        results[name] = {"inference_time": cpu_time, "name": name, "framework": "viewcrafter"}
+
+
+    print("ViewCrafter Success")
+
+    results_path = input_path.split("/")[0: -2]
+    results_path = os.path.join("/", *results_path)
+    final_results = {"viewcrafter": results}
+
+    with open(os.path.join(results_path, "results.json"), 'w') as f:
+        json.dump(final_results, f)
+
 
 def main():
     """
