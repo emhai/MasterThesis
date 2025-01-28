@@ -103,10 +103,11 @@ def run(original_path, synthesized_path):
     synthesized_name = os.path.basename(synthesized_path)
     image_pair = [original_name, synthesized_name]
     lpips = LPIPS(original_path, synthesized_path)
+    lpips = lpips.item()
     psnr= PSNR(original_path, synthesized_path)
     ssim = SSIM(original_path, synthesized_path)
     print(f"For files {original_name}, {synthesized_name}: PSNR: {psnr:.3f}, SSIM: {ssim:.3f}, LPIPS: {lpips:.3f}")
-    return [image_pair, lpips, psnr, ssim]
+    return image_pair, lpips, psnr, ssim
 
 def main():
     """

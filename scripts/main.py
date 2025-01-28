@@ -12,6 +12,7 @@ import visualize_cameras
 import convert_to_torch
 import run_mvsplat360
 from datetime import datetime
+import viewcrafter_metrics
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -94,6 +95,8 @@ def main():
     # VIEWCRAFTER
     run_viewcrafter.run(vc_input_path, vc_output_path, vc_scripts_path)
     extract_frames.run(vc_output_path)
+    viewcrafter_metrics.run(viewcrafter_path)
+
 
     # MVSPLAT360
     run_colmap.run(original_images_path, mv_colmap_path)

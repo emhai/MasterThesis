@@ -74,15 +74,14 @@ def run(input_path, output_path, scripts_path):
 
     results_path = input_path.split("/")[0: -2]
     results_path = os.path.join("/", *results_path, "results.json")
-    final_results = {"viewcrafter": results}
 
     try:
         with open(results_path, 'r') as f:
             data = json.load(f)
+            data["viewcrafter"] = results
     except FileNotFoundError:
-        data = []
+        data = {"viewcrafter": results}
 
-    data.append(final_results)
 
     with open(results_path, 'w') as f:
         json.dump(data, f, indent=4)
