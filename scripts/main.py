@@ -11,6 +11,7 @@ import run_colmap
 import visualize_cameras
 import convert_to_torch
 import run_mvsplat360
+from datetime import datetime
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -34,11 +35,16 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('path', type=utils.dir_path, help='Path to the image directory')
-    parser.add_argument('name', type=str, help='Name of test')
+    parser.add_argument('name', type=str, nargs='?', default=None, help='Name of test (optional)')
 
     args = parser.parse_args()
     path = args.path # folder with input pictures
     name = args.name # name of test
+
+    if name is None:
+        time = datetime.now().strftime("%m%d_%H%M")
+        folder_name = os.path.basename(path)
+        name = f"{folder_name}_{time}"
 
     main_folder_path = os.path.join("/home/emmahaidacher/Masterthesis/MasterThesis/tests", name)
     if not os.path.exists(main_folder_path):

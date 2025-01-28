@@ -1,8 +1,10 @@
 import argparse
+import io
 import shutil
 import subprocess
 
-from fontTools.unicodedata import script
+import torch
+from PIL import Image
 
 import utils
 import os
@@ -19,6 +21,17 @@ def run(input_path, output_path):
 
     results = {}
 
+    for file in os.listdir(os.path.join(input_path, "test")):
+        if file.endswith(".torch"):
+            torch_data = torch.load(os.path.join(input_path, "test", file))
+            image_tensor = torch_data[0]["images"][0]
+
+            byte_data = image_tensor.numpy().tobytes()
+            image = Image.open(io.BytesIO(byte_data))
+            width, height = image.size
+
+            size = f"[{height},{width}]"
+
     for file in os.listdir(json_dir):
 
         test_file = os.path.join(json_dir, file)
@@ -27,7 +40,7 @@ def run(input_path, output_path):
         modified_content = re.sub(r'CHOSEN_NAME', name, modified_content)
         modified_content = re.sub(r'PATH_TO_JSON', test_file, modified_content)
         modified_content = re.sub(r'PATH_TO_DATASET', input_path, modified_content)
-        modified_content = re.sub(r'IMAGE_SHAPE', "[378,504]", modified_content) # e.g. [378,504] -- [h,w]
+        modified_content = re.sub(r'IMAGE_SHAPE', size, modified_content) # e.g. [378,504] -- [h,w]
         modified_content = re.sub(r'PATH_TO_OUT_DIR', output_path, modified_content)
         modified_content = modified_content.replace("\n", "")
 
@@ -47,11 +60,19 @@ def run(input_path, output_path):
 
     print("MVSplat360 Success")
     results_path = input_path.split("/")[0: -2]
-    results_path = os.path.join("/", *results_path)
+    results_path = os.path.join("/", *results_path, "results.json")
     final_results = {"mvsplat360": results}
-    with open(os.path.join(results_path, "results.json"), 'w') as f:
-        json.dump(final_results, f)
 
+    try:
+        with open(results_path, 'r') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = []
+
+    data.append(final_results)
+
+    with open(results_path, 'w') as f:
+        json.dump(data, f, indent=4)
 
 def main():
     """

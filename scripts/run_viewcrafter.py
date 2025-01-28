@@ -2,8 +2,6 @@ import argparse
 import shutil
 import subprocess
 
-from fontTools.unicodedata import script
-
 import utils
 import os
 import re
@@ -75,11 +73,19 @@ def run(input_path, output_path, scripts_path):
     print("ViewCrafter Success")
 
     results_path = input_path.split("/")[0: -2]
-    results_path = os.path.join("/", *results_path)
+    results_path = os.path.join("/", *results_path, "results.json")
     final_results = {"viewcrafter": results}
 
-    with open(os.path.join(results_path, "results.json"), 'w') as f:
-        json.dump(final_results, f)
+    try:
+        with open(results_path, 'r') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = []
+
+    data.append(final_results)
+
+    with open(results_path, 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 def main():

@@ -8,22 +8,16 @@ def run(path, width, height):
     path = path.rstrip("/")
     size = (width, height)
 
-    new_folder_path = os.path.join(os.path.dirname(path), "cropped_images")
-    if not os.path.exists(new_folder_path):
-        os.makedirs(new_folder_path)
-
-
     print(f"Cropping images {os.path.join(path)}")
 
     for path, dirs, files in os.walk(path):
         for file in files:
-            # todo this works but I could use viewcrafters center_crop_image
             image_path = os.path.join(path, file)
             image = Image.open(image_path)
             file_name = os.path.basename(image_path)
 
             image = ImageOps.fit(image, size, method=Image.LANCZOS, centering=(0.5, 0.5))
-            image.save(os.path.join(new_folder_path, file_name))
+            image.save(os.path.join(path, file_name))
 
 def main():
     """
