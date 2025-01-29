@@ -19,8 +19,9 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
     len_filenames = len(filenames)
     if len_filenames % 2 == 0:
         os.remove(os.path.join(input_path, filenames[-1]))
+        len_filenames -= 1
 
-    image_amount = len(filenames) // 2
+    image_amount = len_filenames // 2
     middle_i = image_amount
 
     print(f"Creating Image Combinations")

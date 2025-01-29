@@ -92,22 +92,25 @@ def main():
         new_path = os.path.join(original_images_path, f"{i:03}{extension}")
         os.rename(old_path, new_path)
 
-    resize_images.run(original_images_path, 1024, 576)
-    # for now for speed since viewcrafter makes smaller
-
     create_image_combinations.run(original_images_path, vc_input_path, vc_GT_path, mv_input_json_path)
 
     # VIEWCRAFTER
+    print()
     run_viewcrafter.run(vc_input_path, vc_output_path, vc_scripts_path)
     extract_frames.run(vc_output_path)
     viewcrafter_metrics.run(viewcrafter_path)
+    print()
+
 
     # MVSPLAT360
+    print()
     run_colmap.run(original_images_path, mv_colmap_path)
     visualize_cameras.run(os.path.join(mv_colmap_path, "transforms.json"))
-    convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path)
+    convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path) # choose resolution based on size
     run_mvsplat360.run(mv_input_path, mv_output_path)
     mvsplat_metrics.run(mv_output_path)
+    print()
+
 
     add_distances.run(os.path.join(mv_colmap_path, "transforms.json"), results_path)
 

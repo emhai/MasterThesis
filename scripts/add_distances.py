@@ -46,13 +46,12 @@ def run(transform_path, results_path):
                     second_translation = matrices[second_name]["translation"]
 
                     distance = calc_distance(first_translation, second_translation)
-                    results_data[framework][result][f"distance_{first_name}_{second_name}"] = distance
+
+                    results_data[framework][result][f"dist_{i}{j}"] = distance
                     # print(indices[i], indices[j], distance)
 
     with open(results_path, 'w') as f:
         json.dump(results_data, f, indent=4)
-
-
 
 def main():
     """
