@@ -14,6 +14,9 @@ def run(input_path, output_path, scripts_path):
     # in ViewCrafter folder
     ori_script_path = '/home/emmahaidacher/Desktop/viewcrafter/ViewCrafter/run_sparse.sh'
     ori_script_folder = os.path.dirname(ori_script_path)
+    outer_path = input_path.split("/")[0: -2]
+    results_path = os.path.join("/", *outer_path, "results.json")
+    stdout_path = os.path.join("/", *outer_path, "output.json")
 
     with open(ori_script_path, 'r') as file:
         script_content = file.read()
@@ -72,8 +75,6 @@ def run(input_path, output_path, scripts_path):
 
     print("ViewCrafter Success")
 
-    results_path = input_path.split("/")[0: -2]
-    results_path = os.path.join("/", *results_path, "results.json")
 
     try:
         with open(results_path, 'r') as f:

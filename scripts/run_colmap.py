@@ -11,6 +11,9 @@ def run(input_path, output_path):
     original_env = os.environ.copy()
 
     print(f"Running Colmap on {input_path}")
+    # got error, fixed with https://chatgpt.com/c/679a117a-c5ec-8001-8bb6-6d6679505fbc
+    os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
     # https://chatgpt.com/c/67891c7d-8db4-8001-8f47-5e79e6e89c68 -- help from chatgpt
     # Important! deactivate scripts - activate nerfstudio - deactivate nerfstudio - activate scripts
     subprocess.run(

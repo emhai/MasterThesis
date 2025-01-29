@@ -9,14 +9,14 @@ from PIL import Image
 import utils
 import os
 import re
-import stat
 import resource
 import json
+
+
 def run(input_path, output_path):
 
     json_dir = os.path.join(input_path, "json_files") # todo ACHTUNG, muss gleich sein wie in main.py
-    mvsplat_dir = "/home/emmahaidacher/Desktop/mvsplat360/mvsplat360"
-    with open("/home/emmahaidacher/Masterthesis/MasterThesis/scripts/mvsplat_input.txt", 'r') as file:
+    with open("/scripts/mvsplat360/mvsplat_input.txt", 'r') as file:
         script_content = file.read()
 
     results = {}

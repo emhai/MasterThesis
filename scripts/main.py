@@ -1,8 +1,8 @@
 import argparse
 import os
 import shutil
+from datetime import datetime
 
-import resize_images
 import run_viewcrafter
 import create_image_combinations
 import utils
@@ -11,8 +11,9 @@ import run_colmap
 import visualize_cameras
 import convert_to_torch
 import run_mvsplat360
-from datetime import datetime
 import viewcrafter_metrics
+import mvsplat_metrics
+
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -26,7 +27,7 @@ def main():
                 2. create folder ../name
                 3. copy images to ../name/original_images
                    run colmap to get tranfsorms.json
-                   run viszalize cameras
+                   run visualize cameras
                 4. create pairwise combinations of variable length to ../name/input
                 5. process each combination with viewcrafter to ../name/output
                 6. create cropped ground truth images to ../name/cropped_images
@@ -97,13 +98,12 @@ def main():
     extract_frames.run(vc_output_path)
     viewcrafter_metrics.run(viewcrafter_path)
 
-
     # MVSPLAT360
     run_colmap.run(original_images_path, mv_colmap_path)
     visualize_cameras.run(os.path.join(mv_colmap_path, "transforms.json"))
     convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path)
     run_mvsplat360.run(mv_input_path, mv_output_path)
-
+    mvsplat_metrics.run(mv_output_path)
 
 
 if __name__ == "__main__":
