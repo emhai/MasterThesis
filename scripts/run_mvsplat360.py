@@ -17,8 +17,13 @@ def run(input_path, output_path):
 
     print(f"Running MVSPLAT360 on {input_path}")
     json_dir = os.path.join(input_path, "json_files") # todo ACHTUNG, muss gleich sein wie in main.py
-    with open("/scripts/mvsplat360/mvsplat_input.txt", 'r') as file:
+    mvsplat_dir = "/home/emmahaidacher/Desktop/mvsplat360/mvsplat360"
+    with open("/home/emmahaidacher/Masterthesis/MasterThesis/scripts/mvsplat_input.txt", 'r') as file:
         script_content = file.read()
+
+    outer_path = input_path.split("/")[0: -2]
+    results_path = os.path.join("/", *outer_path, "results.json")
+    stdout_path = os.path.join("/", *outer_path, "output.log")
 
     results = {}
 
@@ -49,9 +54,10 @@ def run(input_path, output_path):
         # https://stackoverflow.com/questions/13889066/run-an-external-command-and-get-the-amount-of-cpu-it-consumed/13933797#13933797
         usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
         print("Currently running:", name)
-        subprocess.run(
-            f'bash -c "source ~/.zshrc && conda deactivate && conda activate mvsplat360 && cd {mvsplat_dir} && {modified_content}"',
-            shell=True)
+        with open(stdout_path, "a") as f:
+            subprocess.run(
+                f'bash -c "source ~/.zshrc && conda deactivate && conda activate mvsplat360 && cd {mvsplat_dir} && {modified_content}"',
+                shell=True,  stdout=f, stderr=subprocess.STDOUT)
         usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
         cpu_time = usage_end.ru_utime - usage_start.ru_utime
         os.environ.clear()
@@ -60,8 +66,6 @@ def run(input_path, output_path):
 
 
     print("MVSPLAT360 Success")
-    results_path = input_path.split("/")[0: -2]
-    results_path = os.path.join("/", *results_path, "results.json")
 
     try:
         with open(results_path, 'r') as f:

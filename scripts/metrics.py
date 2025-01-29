@@ -1,5 +1,7 @@
 import argparse
 import os
+import warnings
+
 from skimage.metrics import structural_similarity
 from math import log10, sqrt
 import cv2
@@ -69,11 +71,12 @@ def SSIM(original_path, synthesized_path):
     # additional_SSIM(diff, original, synthesized)
     return score
 
+
 # https://github.com/richzhang/PerceptualSimilarity/blob/master/test_network.py
 def LPIPS(original_path, synthesized_path):
 
     spatial = True
-    loss_fn = lpips.LPIPS(net='alex', spatial=spatial)  # Can also set net = 'squeeze' or 'vgg'
+    loss_fn = lpips.LPIPS(net='alex', spatial=spatial, verbose=False)  # Can also set net = 'squeeze' or 'vgg'
 
     original = lpips.im2tensor(lpips.load_image(original_path))
     synthesized = lpips.im2tensor(lpips.load_image(synthesized_path))
@@ -95,6 +98,9 @@ def LPIPS(original_path, synthesized_path):
         # pylab.show()
 
 def run(original_path, synthesized_path):
+    warnings.filterwarnings("ignore", category=UserWarning) # in torchvision "Arguments other than a weight enum ... deprecated"
+    warnings.filterwarnings("ignore", category=FutureWarning) # in lpips "You are using torch.load with weights_onl=False ... deprecated"
+
     original_name = os.path.basename(original_path)
     synthesized_name = os.path.basename(synthesized_path)
     image_pair = [original_name, synthesized_name]
@@ -102,7 +108,7 @@ def run(original_path, synthesized_path):
     lpips = lpips.item()
     psnr= PSNR(original_path, synthesized_path)
     ssim = SSIM(original_path, synthesized_path)
-    print(f"For files {original_name}, {synthesized_name}: PSNR: {psnr:.3f}, SSIM: {ssim:.3f}, LPIPS: {lpips:.3f}")
+    # print(f"For files {original_name}, {synthesized_name}: PSNR: {psnr:.3f}, SSIM: {ssim:.3f}, LPIPS: {lpips:.3f}")
     return image_pair, lpips, psnr, ssim
 
 def main():

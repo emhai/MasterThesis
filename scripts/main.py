@@ -13,7 +13,8 @@ import convert_to_torch
 import run_mvsplat360
 import viewcrafter_metrics
 import mvsplat_metrics
-
+import add_distances
+import resize_images
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -60,6 +61,7 @@ def main():
     original_images_path = os.path.join(main_folder_path, "images")
     viewcrafter_path = os.path.join(main_folder_path, "viewcrafter")
     mvsplat_path = os.path.join(main_folder_path, "mvsplat360")
+    results_path = os.path.join(main_folder_path, "results.json")
 
     vc_input_path = os.path.join(viewcrafter_path, "input")
     vc_output_path = os.path.join(viewcrafter_path, "output")
@@ -84,12 +86,14 @@ def main():
     filenames.sort()
 
     # rename
-    for i, filename in enumerate(filenames,):
+    for i, filename in enumerate(filenames):
         name, extension = os.path.splitext(filename)
         old_path = os.path.join(original_images_path, filename)
         new_path = os.path.join(original_images_path, f"{i:03}{extension}")
         os.rename(old_path, new_path)
 
+    resize_images.run(original_images_path, 1024, 576)
+    # for now for speed since viewcrafter makes smaller
 
     create_image_combinations.run(original_images_path, vc_input_path, vc_GT_path, mv_input_json_path)
 
@@ -105,6 +109,7 @@ def main():
     run_mvsplat360.run(mv_input_path, mv_output_path)
     mvsplat_metrics.run(mv_output_path)
 
+    add_distances.run(os.path.join(mv_colmap_path, "transforms.json"), results_path)
 
 if __name__ == "__main__":
     main()

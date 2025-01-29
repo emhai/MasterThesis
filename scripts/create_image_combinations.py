@@ -28,14 +28,15 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
     for i in range(image_amount):
         last_i = len_filenames - 1 - i
         name1 = strip_to_numerals(filenames[i])
-        name2 = strip_to_numerals(filenames[last_i])
+        name2 = strip_to_numerals(filenames[middle_i])
+        name3 = strip_to_numerals(filenames[last_i])
 
-        if middle_i == int(name1) + 1 and middle_i == int(name2) - 1:
+        if middle_i == int(name1) + 1 and middle_i == int(name3) - 1:
             # for pictures abcde only take a,c,e and not b,c,d since we won't have GT files.
             continue
 
         # INPUT FOR VIEWCRAFTER
-        folder_name = f"{name1}_{name2}"
+        folder_name = f"{name1}_{name2}_{name3}"
         folder_path = os.path.join(vc_input_path, folder_name)
         os.makedirs(folder_path)
         shutil.copyfile(os.path.join(input_path, filenames[i]), os.path.join(folder_path, filenames[i]))

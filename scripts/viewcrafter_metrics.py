@@ -42,7 +42,7 @@ def find_best_matches(synthesized_path, ground_truth_path):
                 best_match = synth_path
                 # todo optimize somehow?
 
-            print(f"Comparing {gt_file} to {synth_file} gives ssim {current_ssim}")
+            #print(f"Comparing {gt_file} to {synth_file} gives ssim {current_ssim}")
 
         best_matches[gt_path] = best_match
 

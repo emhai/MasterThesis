@@ -7,7 +7,8 @@ def run(path):
 
     print(f"Extracting frames from {path}")
     outer_path = path.split("/")[0: -2]
-    results_path = os.path.join("/", *outer_path, "output.txt")
+    stdout_path = os.path.join("/", *outer_path, "output.log")
+
 
     for subdir in os.listdir(path):
         subdir_path = os.path.join(path, subdir)
@@ -17,14 +18,16 @@ def run(path):
             os.makedirs(diffusion_path)
 
         ffmpeg_command = ['ffmpeg', '-i', os.path.join(subdir_path, "diffusion.mp4"), f"{diffusion_path}/diffusion_frame_%04d.jpg"]
-        subprocess.run(ffmpeg_command)
+        with open(stdout_path, "a") as f:
+            subprocess.run(ffmpeg_command, stdout=f, stderr=subprocess.STDOUT)
 
         render_path = os.path.join(subdir_path, "extracted_render")
         if not os.path.exists(render_path):
             os.makedirs(render_path)
 
         ffmpeg_command = ['ffmpeg', '-i', os.path.join(subdir_path, "render.mp4"), f"{render_path}/render_frame_%04d.jpg"]
-        subprocess.run(ffmpeg_command)
+        with open(stdout_path, "a") as f:
+            subprocess.run(ffmpeg_command, stdout=f, stderr=subprocess.STDOUT)
 
 def main():
     """

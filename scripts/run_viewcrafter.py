@@ -15,9 +15,10 @@ def run(input_path, output_path, scripts_path):
     # in ViewCrafter folder
     ori_script_path = '/home/emmahaidacher/Desktop/viewcrafter/ViewCrafter/run_sparse.sh'
     ori_script_folder = os.path.dirname(ori_script_path)
+    # todo copy and change script like in mvsplat
     outer_path = input_path.split("/")[0: -2]
     results_path = os.path.join("/", *outer_path, "results.json")
-    stdout_path = os.path.join("/", *outer_path, "output.json")
+    stdout_path = os.path.join("/", *outer_path, "output.log")
 
     with open(ori_script_path, 'r') as file:
         script_content = file.read()
@@ -58,13 +59,14 @@ def run(input_path, output_path, scripts_path):
         original_env = os.environ.copy()
         # https://stackoverflow.com/questions/13889066/run-an-external-command-and-get-the-amount-of-cpu-it-consumed/13933797#13933797
         usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-        result = subprocess.run([modified_script_path], check=True, text=True, capture_output=True)
+        with open(stdout_path, "a") as f:
+            subprocess.run([modified_script_path], stdout=f, stderr=subprocess.STDOUT)
         usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
         cpu_time = usage_end.ru_utime - usage_start.ru_utime
         os.environ.clear()
         os.environ.update(original_env)
 
-        print(result.stdout)
+
         extra_folder = os.path.join(out_dir, os.listdir(out_dir)[0])
         all_files = os.listdir(extra_folder)
         for f in all_files:
