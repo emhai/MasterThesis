@@ -1,16 +1,12 @@
 import argparse
 import os
-
 from skimage.metrics import structural_similarity
-
 from math import log10, sqrt
 import cv2
 import numpy as np
-import utils
 
 import lpips
-import torch
-import pylab
+
 
 # https://www.geeksforgeeks.org/python-peak-signal-to-noise-ratio-psnr/
 def PSNR(original_path, synthesized_path):
@@ -111,15 +107,15 @@ def run(original_path, synthesized_path):
 
 def main():
     """
-       Takes path to two pictures and returns SSIM, LPIPS, PSNR.
+    Takes path to two pictures and returns SSIM, LPIPS, PSNR. Called by wrappers viewcrafter_metrics and mvsplat_metrics
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('original_path', type=str, help='Path to the ground truth image')
     parser.add_argument('synthesized_path', type=str, help='Path to the synthesized image')
 
     args = parser.parse_args()
-    original_path = args.original_path
-    synthesized_path = args.synthesized_path
+    original_path = args.original_path.rstrip("/")
+    synthesized_path = args.synthesized_path.rstrip("/")
 
     run(original_path, synthesized_path)
 

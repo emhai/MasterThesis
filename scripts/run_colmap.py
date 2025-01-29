@@ -5,7 +5,6 @@ import os
 import argparse
 import utils
 
-
 def run(input_path, output_path):
 
     original_env = os.environ.copy()

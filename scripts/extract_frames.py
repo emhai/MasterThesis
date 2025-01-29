@@ -5,10 +5,13 @@ import subprocess
 
 def run(path):
 
+    print(f"Extracting frames from {path}")
+    outer_path = path.split("/")[0: -2]
+    results_path = os.path.join("/", *outer_path, "output.txt")
+
     for subdir in os.listdir(path):
         subdir_path = os.path.join(path, subdir)
 
-        print(f"Extracting frames from {subdir_path}")
         diffusion_path = os.path.join(subdir_path, "extracted_diffusion")
         if not os.path.exists(diffusion_path):
             os.makedirs(diffusion_path)
@@ -31,7 +34,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('path', type=utils.dir_path, help='Path to ../name/output')
     args = parser.parse_args()
-    run(args.path)
+    path = args.path.rstrip("/")
+    run(path)
 
 if __name__ == "__main__":
     main()

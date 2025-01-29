@@ -50,6 +50,8 @@ def find_best_matches(synthesized_path, ground_truth_path):
 
 def run(viewcrafter_path):
 
+    print("Calculating VIEWCRAFTER metrics")
+
     synthesized_path = os.path.join(viewcrafter_path, "output")
     ground_truth_path = os.path.join(viewcrafter_path, "GT")
 
@@ -79,7 +81,6 @@ def run(viewcrafter_path):
         no_gt = 0
 
         for gt_file, best_match in best_matches.items():
-            print(f"Synthesized: {gt_file} -> Best Match: {best_match}")
             image_pair, calc_lpips, calc_psnr, calc_ssim = metrics.run(gt_file, best_match)
             total_lpips += calc_lpips
             total_ssim += calc_ssim

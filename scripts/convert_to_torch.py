@@ -3,7 +3,6 @@ Builds on https://github.com/cvg/depthsplat/blob/main/src/scripts/convert_dl3dv_
 and  https://github.com/cvg/depthsplat/blob/main/src/scripts/generate_dl3dv_index.py
 """
 
-
 import argparse
 import os
 import utils
@@ -17,7 +16,6 @@ def load_metadata(transforms_path):
     )
 
     url = str(transforms_path).split("/")[-3]
-    # todo, just name
     with open(transforms_path, "r") as f:
         meta_data = json.load(f)
 
@@ -57,6 +55,7 @@ def load_metadata(transforms_path):
 
 def run(colmap_path, resolution, output_path):
 
+    print(f"Converting {colmap_path}/{resolution} to torch file")
     key = colmap_path.split("/")[-3]
     images_path = os.path.join(colmap_path, resolution)
     images = {}
@@ -86,7 +85,8 @@ def run(colmap_path, resolution, output_path):
 
 def main():
     """
-    Takes path ../name/colmap_images and converts the images_8 folder to one big torch file
+    Takes path ../name/mvsplat360/colmap and ../name/mvsplat/input/test and resolution (probably images_8, everything
+     else could be too big). Converts everything to one big torch file as needed by mvsplat360
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('colmap_path', type=utils.dir_path, help='Path to the ..name/mvsplat360/colmap')
@@ -94,7 +94,9 @@ def main():
     parser.add_argument("resolution", type=str, default="images_8", help='images_8, images, ... whichever')
 
     args = parser.parse_args()
-    run(args.colmap_path, args.resolution, args.output_path)
+    colmap_path = args.colmap_path.rstrip("/")
+    output_path = args.output_path.rstrip("/")
+    run(colmap_path, args.resolution, output_path)
 
 if __name__ == "__main__":
     main()

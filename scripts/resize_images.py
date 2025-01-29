@@ -5,7 +5,6 @@ import utils
 
 def run(path, width, height):
 
-    path = path.rstrip("/")
     size = (width, height)
 
     print(f"Cropping images {os.path.join(path)}")
@@ -32,7 +31,8 @@ def main():
     # todo or parse other image and use that size
 
     args = parser.parse_args()
-    run(args.path, args.width, args.height)
+    path = args.path.rstrip("/")
+    run(path, args.width, args.height)
 
 if __name__ == "__main__":
     main()

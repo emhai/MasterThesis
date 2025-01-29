@@ -15,6 +15,7 @@ import json
 
 def run(input_path, output_path):
 
+    print(f"Running MVSPLAT360 on {input_path}")
     json_dir = os.path.join(input_path, "json_files") # todo ACHTUNG, muss gleich sein wie in main.py
     with open("/scripts/mvsplat360/mvsplat_input.txt", 'r') as file:
         script_content = file.read()
@@ -58,7 +59,7 @@ def run(input_path, output_path):
         results[name] = {"inference_time": cpu_time, "name": name, "framework": "mvsplat360"}
 
 
-    print("MVSplat360 Success")
+    print("MVSPLAT360 Success")
     results_path = input_path.split("/")[0: -2]
     results_path = os.path.join("/", *results_path, "results.json")
 

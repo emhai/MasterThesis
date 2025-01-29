@@ -6,7 +6,7 @@ import os
 import json
 
 def strip_to_numerals(name):
-    # probably unneccesarry because files are 001 to ....
+    # probably unnecessary because files are 001 to ....
     return ''.join(re.findall(r'\d+', name))
 
 def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
@@ -23,7 +23,7 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
     image_amount = len(filenames) // 2
     middle_i = image_amount
 
-    print(f"Creating inputs")
+    print(f"Creating Image Combinations")
 
     for i in range(image_amount):
         last_i = len_filenames - 1 - i
@@ -31,7 +31,9 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
         name2 = strip_to_numerals(filenames[last_i])
 
         if middle_i == int(name1) + 1 and middle_i == int(name2) - 1:
+            # for pictures abcde only take a,c,e and not b,c,d since we won't have GT files.
             continue
+
         # INPUT FOR VIEWCRAFTER
         folder_name = f"{name1}_{name2}"
         folder_path = os.path.join(vc_input_path, folder_name)
@@ -60,8 +62,9 @@ def run(input_path, vc_input_path, vc_ground_truth_path, mv_input_path):
 
 def main():
     """
-    Takes path ../name/original_images and creates a new subfolder ../name/input
-    and subsequently new folders for pairs of images of varying length.
+    Very important file. Takes path ../name/original_images and creates for mvsplat: the json files (context:, target:)
+    and for viewcrafter: the input files folders as well as the matching ground truth folders. Right now always takes
+    3 pictures (for abcde it takes a,c,e and for abcdefg it takes b,d,f and a,d,g) since mvsplat always needs 3 pictures.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('input_path', type=utils.dir_path, help='Path to ../name/original_images')

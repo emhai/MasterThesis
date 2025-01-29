@@ -1,11 +1,8 @@
 import argparse
 import json
 import os
-import cv2
-from skimage.metrics import structural_similarity as ssim
 import utils
 import metrics
-import resize_images
 from PIL import Image
 
 def get_size(synthesized_path):
@@ -17,6 +14,7 @@ def get_size(synthesized_path):
 
 def run(mv_path):
 
+    print("Calculating MVSPLAT360 metrics")
     outer_path = os.path.dirname(os.path.dirname(mv_path))
     results_path = os.path.join(outer_path, "results.json")
     detailed_results_path = os.path.join(outer_path, "mvsplat_results.json")

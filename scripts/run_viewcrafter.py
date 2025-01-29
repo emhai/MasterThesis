@@ -11,6 +11,7 @@ import json
 
 def run(input_path, output_path, scripts_path):
 
+    print(f"Running VIEWCRAFTER on {input_path}")
     # in ViewCrafter folder
     ori_script_path = '/home/emmahaidacher/Desktop/viewcrafter/ViewCrafter/run_sparse.sh'
     ori_script_folder = os.path.dirname(ori_script_path)
@@ -73,7 +74,7 @@ def run(input_path, output_path, scripts_path):
         results[name] = {"inference_time": cpu_time, "name": name, "framework": "viewcrafter"}
 
 
-    print("ViewCrafter Success")
+    print("VIEWCRAFTER Success")
 
 
     try:
