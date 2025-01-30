@@ -16,6 +16,7 @@ import mvsplat_metrics
 import add_distances
 import resize_images
 import visualize_results
+import visualize_result_images
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -39,6 +40,7 @@ def run(path, name):
     viewcrafter_path = os.path.join(main_folder_path, "viewcrafter")
     mvsplat_path = os.path.join(main_folder_path, "mvsplat360")
     results_path = os.path.join(main_folder_path, "results.json")
+    results_folder_path = os.path.join(main_folder_path, "results")
 
     vc_input_path = os.path.join(viewcrafter_path, "input")
     vc_output_path = os.path.join(viewcrafter_path, "output")
@@ -90,7 +92,8 @@ def run(path, name):
 
 
     add_distances.run(os.path.join(mv_colmap_path, "transforms.json"), results_path)
-    visualize_results.run(results_path)
+    #visualize_results.run(results_path)
+    #visualize_result_images.run(main_folder_path)
 
 def main():
     """
