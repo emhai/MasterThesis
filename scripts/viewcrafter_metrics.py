@@ -80,7 +80,9 @@ def run(viewcrafter_path):
         total_psnr = 0
         no_gt = 0
 
-        for i, gt_file, best_match in enumerate(best_matches.items()):
+        i = 0
+        detailed_results[synth_name] = {}
+        for gt_file, best_match in best_matches.items():
             calc_lpips, calc_psnr, calc_ssim = metrics.run(gt_file, best_match)
             total_lpips += calc_lpips
             total_ssim += calc_ssim
@@ -88,6 +90,7 @@ def run(viewcrafter_path):
             no_gt += 1
 
             detailed_results[synth_name][i] = {"ground_truth": gt_file, "novel_view": best_match , "LPIPS": calc_lpips, "SSIM": calc_ssim, "PSNR": calc_psnr}
+            i+=1
 
         result = {"no_gt": no_gt, "LPIPS": total_lpips / no_gt, "SSIM": total_ssim / no_gt, "PSNR": total_psnr / no_gt, "Resolution": f"{width}x{height}"}
 

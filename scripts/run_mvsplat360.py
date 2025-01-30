@@ -16,7 +16,7 @@ import json
 def run(input_path, output_path):
 
     print(f"Running MVSPLAT360 on {input_path}")
-    json_dir = os.path.join(input_path, "json_files") # todo ACHTUNG, muss gleich sein wie in main.py
+    json_dir = os.path.join(input_path, "json_files") # ACHTUNG, muss gleich sein wie in main.py
     mvsplat_dir = "/home/emmahaidacher/Desktop/mvsplat360/mvsplat360"
     with open("/home/emmahaidacher/Masterthesis/MasterThesis/scripts/mvsplat_input.txt", 'r') as file:
         script_content = file.read()

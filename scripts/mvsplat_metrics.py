@@ -37,6 +37,7 @@ def run(mv_path):
         total_psnr = 0
         no_gt = 0
 
+        detailed_results[synth_name] = {}
         for i, frame in enumerate(os.listdir(synthesized_path)):
             gt_file = os.path.join(ground_truth_path, frame)
             synth_file = os.path.join(synthesized_path, frame)
