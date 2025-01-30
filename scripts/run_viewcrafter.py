@@ -24,8 +24,9 @@ def run(input_path, output_path, scripts_path):
         script_content = file.read()
 
     results = {}
+    test_amount = len(os.listdir(input_path))
 
-    for name in os.listdir(input_path):
+    for i, name in enumerate(os.listdir(input_path), start=1):
         in_dir = os.path.join(input_path, name)
         files = [f for f in os.listdir(in_dir)]
 
@@ -43,7 +44,7 @@ def run(input_path, output_path, scripts_path):
         modified_content = re.sub(r'--video_length\s+\S+', f'--video_length {video_length}', modified_content)
         # modified_content = re.sub(r'python\s+\S+', f'python {modified_script_path}', modified_content)
 
-        print("Currently running:", name)
+        print(f"Currently running {i}/{test_amount}:", name)
 
         with open(modified_script_path, 'w') as file:
             file.write("#!/bin/bash\n")

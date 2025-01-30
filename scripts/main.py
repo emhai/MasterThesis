@@ -15,6 +15,7 @@ import viewcrafter_metrics
 import mvsplat_metrics
 import add_distances
 import resize_images
+import visualize_results
 
 def create_folder_structure(folders):
     for folder in folders:
@@ -22,32 +23,8 @@ def create_folder_structure(folders):
             os.makedirs(folder)
             print('Created folder:', folder)
 
-def main():
-    """
-    Pipeline:   1. todo choose pictures
-                2. create folder ../name
-                3. copy images to ../name/original_images
-                   run colmap to get tranfsorms.json
-                   run visualize cameras
-                4. create pairwise combinations of variable length to ../name/input
-                5. process each combination with viewcrafter to ../name/output
-                6. create cropped ground truth images to ../name/cropped_images
-                7. todo choose ground truth images
-                8. evaluate metrics
-    """
-    parser = argparse.ArgumentParser()
 
-    parser.add_argument('path', type=utils.dir_path, help='Path to the image directory')
-    parser.add_argument('name', type=str, nargs='?', default=None, help='Name of test (optional)')
-
-    args = parser.parse_args()
-    path = args.path # folder with input pictures
-    name = args.name # name of test
-
-    if name is None:
-        time = datetime.now().strftime("%m%d_%H%M")
-        folder_name = os.path.basename(path)
-        name = f"{folder_name}_{time}"
+def run(path, name):
 
     main_folder_path = os.path.join("/home/emmahaidacher/Masterthesis/MasterThesis/tests", name)
     if not os.path.exists(main_folder_path):
@@ -113,6 +90,36 @@ def main():
 
 
     add_distances.run(os.path.join(mv_colmap_path, "transforms.json"), results_path)
+    visualize_results.run(results_path)
+
+def main():
+    """
+    Pipeline:   1. todo choose pictures
+                2. create folder ../name
+                3. copy images to ../name/original_images
+                   run colmap to get tranfsorms.json
+                   run visualize cameras
+                4. create pairwise combinations of variable length to ../name/input
+                5. process each combination with viewcrafter to ../name/output
+                6. create cropped ground truth images to ../name/cropped_images
+                7. todo choose ground truth images
+                8. evaluate metrics
+    """
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('path', type=utils.dir_path, help='Path to the image directory')
+    parser.add_argument('name', type=str, nargs='?', default=None, help='Name of test (optional)')
+
+    args = parser.parse_args()
+    path = args.path.rstrip("/") # folder with input pictures
+    name = args.name # name of test
+
+    if name is None:
+        time = datetime.now().strftime("%m%d_%H%M")
+        folder_name = os.path.basename(path)
+        name = f"{folder_name}_{time}"
+
+    run(path, name)
 
 if __name__ == "__main__":
     main()

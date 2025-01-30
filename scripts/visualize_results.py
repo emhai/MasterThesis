@@ -63,35 +63,29 @@ def run(path):
         styles = ["", ""]
         if res_1 is not None and res_2 is not None:
             if res_1 > res_2:
-                styles[0] = "background-color: #D0F0C0"  # Highlight lower resolution
+                styles[0] = "border: 1px solid red"  # Highlight lower resolution
             elif res_1 < res_2:
-                styles[1] = "background-color: #D0F0C0"  # Highlight lower resolution
+                styles[1] = "border: 1px solid red"  # Highlight lower resolution
 
         return styles
 
     def highlight_lower(row, col1, col2):
-        """Highlights the lower value between two columns in a row."""
-        value_1 = row[col1]
-        value_2 = row[col2]
-
-        styles = ["", ""]
-        if value_1 < value_2:
-            styles[0] = "background-color: #D0F0C0"
-        elif value_1 > value_2:
-            styles[1] = "background-color: #D0F0C0"
-        return styles
+        color = "border: 1px solid red"
+        no_color = ""
+        return [
+            color if row[col1] < row[col2] else no_color,
+            color if row[col2] < row[col1] else no_color,
+        ]
 
     def highlight_higher(row, col1, col2):
-        """Highlights the lower value between two columns in a row."""
-        value_1 = row[col1]
-        value_2 = row[col2]
+        color = "border: 1px solid red"
+        no_color = ""
+        return [
+            color if row[col1] > row[col2] else no_color,
+            color if row[col2] > row[col1] else no_color,
+        ]
 
-        styles = ["", ""]
-        if value_1 > value_2:
-            styles[0] = "background-color: #D0F0C0"
-        elif value_1 > value_2:
-            styles[1] = "background-color: #D0F0C0"
-        return styles
+    df = df.sort_values(by="distance_02", ascending=True)  # Set ascending=False for descending order
 
     styled_df = df.style \
         .apply(lambda row: highlight_lower(row, "vc_lpips", "mv_lpips"), subset=["vc_lpips", "mv_lpips"], axis=1) \
@@ -100,6 +94,12 @@ def run(path):
         .apply(lambda row: highlight_lower(row, "vc_inference_time", "mv_inference_time"), subset=["vc_inference_time", "mv_inference_time"], axis=1) \
         .apply(lambda row: compare_resolution(row, "vc_resolution", "mv_resolution"), subset=["vc_resolution", "mv_resolution"], axis=1) \
         .background_gradient(subset=["distance_02"], cmap="Greens") \
+        .background_gradient(subset=["vc_psnr"], cmap="Greens") \
+        .background_gradient(subset=["mv_psnr"], cmap="Greens") \
+        .background_gradient(subset=["vc_ssim"], cmap="Greens") \
+        .background_gradient(subset=["mv_ssim"], cmap="Greens") \
+        .background_gradient(subset=["vc_lpips"], cmap="Greens") \
+        .background_gradient(subset=["mv_lpips"], cmap="Greens") \
         .set_properties(**{
         "text-align": "center",  # Center all text
         "width": "120px"  # Increase column width

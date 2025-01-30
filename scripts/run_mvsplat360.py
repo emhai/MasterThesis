@@ -38,7 +38,8 @@ def run(input_path, output_path):
 
             size = f"[{height},{width}]"
 
-    for file in os.listdir(json_dir):
+    image_amount = len(os.listdir(json_dir))
+    for i, file in enumerate(os.listdir(json_dir), start=1):
 
         test_file = os.path.join(json_dir, file)
         name = file.split(".")[0]
@@ -53,7 +54,7 @@ def run(input_path, output_path):
         original_env = os.environ.copy()
         # https://stackoverflow.com/questions/13889066/run-an-external-command-and-get-the-amount-of-cpu-it-consumed/13933797#13933797
         usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-        print("Currently running:", name)
+        print(f"Currently running {i}/{image_amount}:", name)
         with open(stdout_path, "a") as f:
             subprocess.run(
                 f'bash -c "source ~/.zshrc && conda deactivate && conda activate mvsplat360 && cd {mvsplat_dir} && {modified_content}"',

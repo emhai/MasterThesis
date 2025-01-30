@@ -37,16 +37,16 @@ def run(mv_path):
         total_psnr = 0
         no_gt = 0
 
-        for frame in os.listdir(synthesized_path):
+        for i, frame in enumerate(os.listdir(synthesized_path)):
             gt_file = os.path.join(ground_truth_path, frame)
             synth_file = os.path.join(synthesized_path, frame)
-            image_pair, calc_lpips, calc_psnr, calc_ssim = metrics.run(gt_file, synth_file)
+            calc_lpips, calc_psnr, calc_ssim = metrics.run(gt_file, synth_file)
             total_lpips += calc_lpips
             total_ssim += calc_ssim
             total_psnr += calc_psnr
             no_gt += 1
 
-            detailed_results[synth_name] = {"images": image_pair, "LPIPS": calc_lpips, "SSIM": calc_ssim, "PSNR": calc_psnr}
+            detailed_results[synth_name][i] = {"ground_truth": gt_file, "novel_view": synth_file, "LPIPS": calc_lpips, "SSIM": calc_ssim, "PSNR": calc_psnr}
 
         result = {"no_gt": no_gt, "LPIPS": total_lpips / no_gt, "SSIM": total_ssim / no_gt, "PSNR": total_psnr / no_gt, "Resolution": f"{width}x{height}"}
 
