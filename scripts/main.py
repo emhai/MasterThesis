@@ -68,7 +68,7 @@ def run(path, name):
     for i, filename in enumerate(filenames):
         name, extension = os.path.splitext(filename)
         old_path = os.path.join(original_images_path, filename)
-        new_path = os.path.join(original_images_path, f"{i:03}{extension}")
+        new_path = os.path.join(original_images_path, f"{i:03}{extension.lower()}")
         os.rename(old_path, new_path)
 
     create_image_combinations.run(original_images_path, vc_input_path, vc_GT_path, mv_input_json_path)
@@ -92,8 +92,8 @@ def run(path, name):
 
 
     add_distances.run(os.path.join(mv_colmap_path, "transforms.json"), results_path)
-    #visualize_results.run(results_path)
-    #visualize_result_images.run(main_folder_path)
+    visualize_results.run(results_path)
+    visualize_result_images.run(main_folder_path)
 
 def main():
     """

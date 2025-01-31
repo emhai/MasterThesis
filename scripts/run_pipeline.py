@@ -6,7 +6,7 @@ import visualize_cameras
 import main
 
 def run():
-    path = "/home/emmahaidacher/Desktop/full_datasets/finito"
+    path = "/home/emmahaidacher/Desktop/full_datasets/finito2"
 
     for folder in os.listdir(path):
         print("Running {}".format(folder))
@@ -16,7 +16,7 @@ def run():
 
         usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
         cpu_time = usage_end.ru_utime - usage_start.ru_utime
-        print("CPU time: {}".format(cpu_time / 60))
+        print("CPU time: {} minutes".format(cpu_time / 60))
 
 
 
