@@ -3,6 +3,9 @@ import os
 import shutil
 from datetime import datetime
 
+from PIL import Image
+from pandas import wide_to_long
+
 import run_viewcrafter
 import create_image_combinations
 import utils
@@ -85,6 +88,15 @@ def run(path, name):
     print()
     run_colmap.run(original_images_path, mv_colmap_path)
     visualize_cameras.run(os.path.join(mv_colmap_path, "transforms.json"))
+    img_path = os.path.join(mv_colmap_path, "images_8")
+    image = os.listdir(img_path)[0]
+    with Image.open(os.path.join(img_path, image)) as img:
+        width, height = img.size
+        if width % 2 != 0:
+            width = width - 1
+        if height % 2 != 0:
+            height = height - 1
+    resize_images.run(img_path, width, height)
     convert_to_torch.run(mv_colmap_path, "images_8", mv_input_test_path) # choose resolution based on size
     run_mvsplat360.run(mv_input_path, mv_output_path)
     mvsplat_metrics.run(mv_output_path)

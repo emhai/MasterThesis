@@ -14,6 +14,8 @@ def generate_input_plot(key, ground_truth_path, save_path):
 
     plt.tight_layout()
     plt.savefig(os.path.join(save_path, f"input_{key}.jpg"))
+    plt.close(fig)
+
 
 def generate_all(vc_scene, mv_scene, path, key):
 
@@ -84,6 +86,7 @@ def generate_all(vc_scene, mv_scene, path, key):
     #plt.show()
     plt.subplots_adjust(wspace=0.01, hspace=0.01)  # Reduce spacing between rows and columns
     plt.savefig(results_image_path)
+    plt.close(fig)
 
     generate_input_plot(key, GT_path, results_path)
 
@@ -129,6 +132,7 @@ def generate_all(vc_scene, mv_scene, path, key):
 
         plt.tight_layout()
         plt.savefig(os.path.join(results_path, f"comparison_{i}.jpg"))
+        plt.close(fig)
 
 
 def run(path):

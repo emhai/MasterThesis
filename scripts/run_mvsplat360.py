@@ -66,15 +66,7 @@ def run(input_path, output_path):
         os.environ.update(original_env)
         results[name] = {"inference_time": cpu_time, "name": name, "framework": "mvsplat360"}
 
-        # ffmpeg_command = ['ffmpeg', '-r', '1', '-i', os.path.join(subdir_path, "diffusion.mp4"),
-        #                   f"{diffusion_path}/diffusion_frame_%04d.jpg"]
-        # with open(stdout_path, "a") as f:
-        #     subprocess.run(ffmpeg_command, stdout=f, stderr=subprocess.STDOUT)
-        # os.system("ffmpeg -r 1 -i img%01d.png -vcodec mpeg4 -y movie.mp4")
-
         generate_video.run(os.path.join(output_path, name))
-
-
 
     print("MVSPLAT360 Success")
 
