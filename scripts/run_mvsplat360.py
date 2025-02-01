@@ -66,7 +66,7 @@ def run(input_path, output_path):
         os.environ.update(original_env)
         results[name] = {"inference_time": cpu_time, "name": name, "framework": "mvsplat360"}
 
-        generate_video.run(os.path.join(output_path, name))
+        # generate_video.run(os.path.join(output_path, name)) video turns out shitty
 
     print("MVSPLAT360 Success")
 

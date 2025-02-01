@@ -98,8 +98,8 @@ def run(path):
         .background_gradient(subset=["mv_psnr"], cmap="Greens") \
         .background_gradient(subset=["vc_ssim"], cmap="Greens") \
         .background_gradient(subset=["mv_ssim"], cmap="Greens") \
-        .background_gradient(subset=["vc_lpips"], cmap="Greens") \
-        .background_gradient(subset=["mv_lpips"], cmap="Greens") \
+        .background_gradient(subset=["vc_lpips"], cmap="Greens_r") \
+        .background_gradient(subset=["mv_lpips"], cmap="Greens_r") \
         .set_properties(**{
         "text-align": "center",  # Center all text
         "width": "120px"  # Increase column width

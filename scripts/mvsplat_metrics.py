@@ -36,9 +36,10 @@ def run(mv_path):
         total_ssim = 0
         total_psnr = 0
         no_gt = 0
-
+        synthesized_folder = os.listdir(synthesized_path)
+        synthesized_folder = sorted(synthesized_folder)
         detailed_results[synth_name] = {}
-        for i, frame in enumerate(os.listdir(synthesized_path)):
+        for i, frame in enumerate(synthesized_folder):
             gt_file = os.path.join(ground_truth_path, frame)
             synth_file = os.path.join(synthesized_path, frame)
             calc_lpips, calc_psnr, calc_ssim = metrics.run(gt_file, synth_file)

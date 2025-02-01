@@ -4,8 +4,8 @@ import os.path
 from matplotlib import pyplot as plt, image as mpimg
 
 def generate_input_plot(key, ground_truth_path, save_path):
-    fig, axes = plt.subplots(1, 3, figsize=(3, 1.5), dpi=200)
-    images = os.listdir(ground_truth_path)
+    fig, axes = plt.subplots(1, 3, figsize=(3, 1.5), dpi=500)
+    images = sorted(os.listdir(ground_truth_path))
     for i, img in enumerate(images):
         image = os.path.join(ground_truth_path, img)
         axes[i].imshow(mpimg.imread(image))
@@ -22,7 +22,7 @@ def generate_all(vc_scene, mv_scene, path, key):
     num_rows = 3
     num_cols = len(vc_scene) + 3
     indices = [0, num_cols // 2, num_cols - 1]
-    fig, axes = plt.subplots(num_rows, num_cols, figsize=(num_cols * 1.5, 3), dpi=300)
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(num_cols * 1.5, 3), dpi=500)
 
     GT_path = os.path.join(path, "viewcrafter", "input", key)
     ground_truth_images = os.listdir(GT_path)
